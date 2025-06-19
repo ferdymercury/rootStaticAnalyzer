@@ -17,7 +17,6 @@
 */
 
 #include <iostream>
-#include <list>
 #include <string>
 #include <string.h>
 
@@ -38,43 +37,46 @@
 #include <TMD5.h>
 #include <TPRegexp.h>
 
-#include <algorithm>
+//#include <algorithm>
 
-#include "Options.h"
+//#include "Options.h"
 
 #include "classObject.h"
 #include "testInterface.h"
 #include "utilityFunctions.h"
-#include "errorHandling.h"
+//#include "errorHandling.h"
 #include "streamingUtils.h"
 
 #include "testingInitHook.h"
 
-int main(int argc, char** argv) {
-	OptionParser parser("Simple static analyzer for ROOT and ROOT-based projects");
+int main(/*int argc, char** argv*/) {
+    // OptionParser parser("Simple static analyzer for ROOT and ROOT-based projects");
 
-	OptionContainer<std::string> rootMapPatterns('r', "rootMapPattern", "Regexp to match rootmaps to test with, can be given multiple times. '.*' matches all, no patterns given => test ROOT only.");
-	OptionContainer<std::string> classNamePatterns('c', "classNamePattern", "Regexp to match class-names to test, can be given multiple times. '.*' (or no pattern given) tests all.");
-	OptionContainer<std::string> classNameAntiPatterns('C', "classNameAntiPattern", "Regexp to match class-names NOT to test, can be given multiple times. Applied after a class has matched the classNamePattern.");
-	Option<bool> dataObjectsOnly('D', "dataObjectsOnly", "Consider only TObject-inheriting classes with Class-version > 0 for all tests.", false);
-	Option<bool> debug('d', "debug", "Make a lot of debug-noise to debug this program itself.", false);
+    // OptionContainer<std::string> rootMapPatterns('r', "rootMapPattern", "Regexp to match rootmaps to test with, can be given multiple times. '.*' matches all, no patterns given => test ROOT only.");
+    // OptionContainer<std::string> classNamePatterns('c', "classNamePattern", "Regexp to match class-names to test, can be given multiple times. '.*' (or no pattern given) tests all.");
+    // OptionContainer<std::string> classNameAntiPatterns('C', "classNameAntiPattern", "Regexp to match class-names NOT to test, can be given multiple times. Applied after a class has matched the classNamePattern.");
+    // Option<bool> dataObjectsOnly('D', "dataObjectsOnly", "Consider only TObject-inheriting classes with Class-version > 0 for all tests.", false);
+    // Option<bool> debug('d', "debug", "Make a lot of debug-noise to debug this program itself.", false);
 
 	// We need a TApplication-instance to allow for rootmap-checks - at least for ROOT 5.
 	gROOT->SetBatch(kTRUE);
 	TApplication app("app", nullptr, nullptr);
 
-	auto unusedOptions = parser.fParse(argc, argv);
-
-	if (rootMapPatterns.empty()) {
+    // auto unusedOptions = parser.fParse(argc, argv);
+    std::vector<std::string> rootMapPatterns;
+    bool debug = true;
+    //if (rootMapPatterns.empty()) {
 		/* Test ROOT only. */
 		TString rootLibDir(utilityFunctions::getRootLibDir());
 		rootMapPatterns.emplace_back(TString(rootLibDir + "/.*\\.rootmap").Data());
-	}
+    //}
 
 	// Get all rootmaps filtered by the patterns.
 	std::set<std::string> allClasses{utilityFunctions::getRootmapsByRegexps(rootMapPatterns, debug)};
 
 	// Filter by classname-patterns.
+    const std::vector<std::string> classNamePatterns {};
+    const std::vector<std::string> classNameAntiPatterns {};
 	utilityFunctions::filterSetByPatterns(allClasses, classNamePatterns, classNameAntiPatterns, debug);
 
 	if (debug) {
@@ -94,6 +96,7 @@ int main(int argc, char** argv) {
 		if (cls != nullptr) {
 			allTClasses.insert(cls);
 			bool toBeTested = true;
+            bool dataObjectsOnly = false;
 			if (dataObjectsOnly) {
 				if (!cls->InheritsFrom(TObject::Class()) || !(cls->GetClassVersion() > 0)) {
 					toBeTested = false;

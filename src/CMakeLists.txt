@@ -4,6 +4,6 @@ add_executable(rootStaticAnalyzer classObject.cpp rootStaticAnalyzer.cpp utility
 
 include_directories(include)
 include_directories(tests/include)
-target_link_libraries(rootStaticAnalyzer ${ROOT_LIBS} ${OptionParser_LIBRARIES} rootStaticAnalyzerTests)
+target_link_libraries(rootStaticAnalyzer ${ROOT_LIBS} rootStaticAnalyzerTests)
 
 install(TARGETS rootStaticAnalyzer DESTINATION bin)

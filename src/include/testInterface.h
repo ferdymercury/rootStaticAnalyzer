@@ -60,9 +60,9 @@ class testInterface {
 				continue;
 			}
 			if (fCheckPrerequisites(cls)) {
-				if (debug) {
-					std::cout << fGetTestName() << ": Testing " << cls.fGetClassName() << std::endl;
-				}
+                // if (debug) {
+                // 	std::cout << fGetTestName() << ": Testing " << cls.fGetClassName() << std::endl;
+                // }
 				bool result = fRunTest(cls);
 				cls.fMarkTested(fGetTestName(), result);
 				if (debug) {

@@ -140,7 +140,8 @@ void utilityFunctions::parseRootmap(const char* aFilename, std::set<std::string>
 }
 
 TString utilityFunctions::getRootLibDir() {
-	auto sharedLibChar = TROOT::Class()->GetSharedLibs();
+    return gROOT->GetSharedLibDir();
+    /*auto sharedLibChar = TROOT::Class()->GetSharedLibs();
 	TString sharedLib{sharedLibChar};
 	sharedLib = sharedLib.Remove(TString::kBoth, ' ');
 	auto sharedLibWithPath = gSystem->Which(gSystem->GetDynamicPath(), sharedLib);
@@ -158,7 +159,7 @@ TString utilityFunctions::getRootLibDir() {
 	*lastSlash = '\0';
 	TString rootLibDir(sharedLibWithPath);
 	delete [] sharedLibWithPath;
-	return rootLibDir;
+    return rootLibDir;*/
 }
 
 std::set<std::string> utilityFunctions::getRootmapsByRegexps(const std::vector<std::string>& rootMapPatterns, bool debug) {
